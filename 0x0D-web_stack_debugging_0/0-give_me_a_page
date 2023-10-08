@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
-# run apache on designated container
 
-echo "ServerName localhost" >> /etc/apache2.conf
-service apache2 start
+# Install Apache if it's not already installed (assuming you're using apt-get)
+if ! dpkg -l | grep -q apache2; then
+    sudo apt-get update
+    sudo apt-get install -y apache2
+fi
+
+# Append "ServerName localhost" to the Apache configuration
+echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
+# Start the Apache service
+sudo service apache2 start
+
+# Create an HTML file with "Hello Holberton" in the root directory
+echo "Hello Holberton" > /var/www/html/index.html
