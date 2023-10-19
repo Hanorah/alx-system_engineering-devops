@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
-# This Bash script configures Nginx to listen on port 80 in a shorter way
-
-# Create a symbolic link for /etc/nginx/sites-enabled/default
-ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
-
-# Reload Nginx to apply the changes
-service nginx reload
+# debugging nginx (service (init) must say that nginx is not running)
+sed -i 's/8080/80/g' /etc/nginx/sites-enabled/default
+service nginx restart
+pkill -o nginx
