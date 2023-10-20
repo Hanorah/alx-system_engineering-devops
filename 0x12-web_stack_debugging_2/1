@@ -1,2 +1,0 @@
-nginx:x:1000:1000::/home/nginx:/bin/sh
-bin:x:2:2:bin:/bin:/usr/sbin/nologin
