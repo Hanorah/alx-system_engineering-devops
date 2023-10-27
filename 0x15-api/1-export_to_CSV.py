@@ -1,21 +1,35 @@
 #!/usr/bin/python3
-import csv
-import requests
-from sys import argv
 
+"""
+Python script that exports data in the CSV format
+"""
+
+from requests import get
+from sys import argv
+import csv
 
 if __name__ == "__main__":
-    rUser = requests.get("https://jsonplaceholder.typicode.com/users/{}"
-                         .format(argv[1]))
-    emplName = rUser.json().get('username')
-    rTodo = requests.get("https://jsonplaceholder.typicode.com/todos/").json()
-    csvFill = []
-    for d in rTodo:
-        if d.get('userId') == int(argv[1]):
-            csvFill.append(['{}'.format(argv[1]),
-                            '{}'.format(emplName),
-                            '{}'.format(d.get('completed')),
-                            '{}'.format(d.get('title'))])
-    with open('{}.csv'.format(argv[1]), 'w') as file:
-        fileWrite = csv.writer(file, quoting=csv.QUOTE_ALL)
-        fileWrite.writerows(csvFill)
+    response = get('https://jsonplaceholder.typicode.com/todos/')
+    data = response.json()
+
+    row = []
+    response2 = get('https://jsonplaceholder.typicode.com/users')
+    data2 = response2.json()
+
+    for i in data2:
+        if i['id'] == int(argv[1]):
+            employee = i['username']
+
+    with open(argv[1] + '.csv', 'w', newline='') as file:
+        writ = csv.writer(file, quoting=csv.QUOTE_ALL)
+
+        for i in data:
+
+            row = []
+            if i['userId'] == int(argv[1]):
+                row.append(i['userId'])
+                row.append(employee)
+                row.append(i['completed'])
+                row.append(i['title'])
+
+                writ.writerow(row)
