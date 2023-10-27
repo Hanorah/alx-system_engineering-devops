@@ -1,21 +1,41 @@
 #!/usr/bin/python3
-import json
-import requests
-from sys import argv
 
+"""
+Python script exports data in the JSON format.
+"""
+
+from requests import get
+from sys import argv
+import json
 
 if __name__ == "__main__":
-    rUser = requests.get("https://jsonplaceholder.typicode.com/users/{}"
-                         .format(argv[1]))
-    emplName = rUser.json().get('username')
-    rTodo = requests.get("https://jsonplaceholder.typicode.com/todos/").json()
-    jsonDict = {'{}'.format(argv[1]): []}
-    for d in rTodo:
-        if d.get('userId') == int(argv[1]):
-            jsonDict['{}'
-                     .format(argv[1])].append({'task': d.get('title'),
-                                               'completed': d.get('completed'),
-                                               'username': emplName
-                                               })
-    with open('{}.json'.format(argv[1]), 'w') as file:
-        json.dump(jsonDict, file)
+    response = get('https://jsonplaceholder.typicode.com/todos/')
+    data = response.json()
+
+    row = []
+    response2 = get('https://jsonplaceholder.typicode.com/users')
+    data2 = response2.json()
+
+    for i in data2:
+        if i['id'] == int(argv[1]):
+            u_name = i['username']
+            id_no = i['id']
+
+    row = []
+
+    for i in data:
+
+        new_dict = {}
+
+        if i['userId'] == int(argv[1]):
+            new_dict['username'] = u_name
+            new_dict['task'] = i['title']
+            new_dict['completed'] = i['completed']
+            row.append(new_dict)
+
+    final_dict = {}
+    final_dict[id_no] = row
+    json_obj = json.dumps(final_dict)
+
+    with open(argv[1] + ".json",  "w") as f:
+        f.write(json_obj)
